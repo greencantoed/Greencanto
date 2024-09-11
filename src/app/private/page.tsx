@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react'
+import { Button } from "@/components/ui/button"
 import Link from "next/link"
+
 export default function PrivatePage() {
     return (
       <div className="min-h-screen bg-[#f4f4f4] flex items-center justify-center">
