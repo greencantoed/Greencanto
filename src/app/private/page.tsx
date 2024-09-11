@@ -5,8 +5,8 @@ import dynamic from 'next/dynamic'
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import { Menu, X, LogIn, LogOut } from 'lucide-react'
-import FloatingMenu from '@/components/FloatingMenu'
-import CommunityBlog from '@/components/CommunityBlog'
+import { SrcComponentsFloatingMenu } from '@/components/FloatingMenu'
+import { SrcComponentsCommunityBlog } from '@/components/CommunityBlog'
 
 const SicilyMap = dynamic(() => import('@/components/SicilyMap'), {
   loading: () => <p>Caricamento mappa...</p>,
