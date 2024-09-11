@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import * as turf from '@turf/turf'
@@ -55,6 +55,29 @@ export default function SicilyMap() {
   const map = useRef<mapboxgl.Map | null>(null)
   const [selectedCells, setSelectedCells] = useState<Set<string>>(new Set())
 
+  const handleCellClick = useCallback((e: mapboxgl.MapMouseEvent & { features?: mapboxgl.MapboxGeoJSONFeature[] }) => {
+    if (e.features && e.features.length > 0 && map.current) {
+      const clickedId = e.features[0].properties!.id as string
+      const newSelectedCells = new Set(selectedCells)
+
+      if (newSelectedCells.has(clickedId)) {
+        newSelectedCells.delete(clickedId)
+        map.current.setFeatureState(
+          { source: 'grid', id: clickedId },
+          { selected: false }
+        )
+      } else {
+        newSelectedCells.add(clickedId)
+        map.current.setFeatureState(
+          { source: 'grid', id: clickedId },
+          { selected: true }
+        )
+      }
+
+      setSelectedCells(newSelectedCells)
+    }
+  }, [selectedCells])
+
   useEffect(() => {
     if (map.current) return
 
@@ -76,7 +99,8 @@ export default function SicilyMap() {
         const grid = turf.squareGrid(bbox, cellSide, options)
 
         grid.features.forEach((cell, cellIndex) => {
-          const intersection = turf.intersect(cell, polygon)
+          const cellPolygon = turf.polygon(cell.geometry.coordinates as turf.Position[][])
+          const intersection = turf.intersect(cellPolygon, polygon)
           if (intersection) {
             allCells.push({
               id: `${parcel.id}-${cellIndex}`,
@@ -146,28 +170,7 @@ export default function SicilyMap() {
         }
       })
 
-      map.current!.on('click', 'grid-fill', (e) => {
-        if (e.features && e.features.length > 0) {
-          const clickedId = e.features[0].properties!.id as string
-          const newSelectedCells = new Set(selectedCells)
-
-          if (newSelectedCells.has(clickedId)) {
-            newSelectedCells.delete(clickedId)
-            map.current!.setFeatureState(
-              { source: 'grid', id: clickedId },
-              { selected: false }
-            )
-          } else {
-            newSelectedCells.add(clickedId)
-            map.current!.setFeatureState(
-              { source: 'grid', id: clickedId },
-              { selected: true }
-            )
-          }
-
-          setSelectedCells(newSelectedCells)
-        }
-      })
+      map.current!.on('click', 'grid-fill', handleCellClick)
 
       map.current!.on('mouseenter', 'grid-fill', () => {
         map.current!.getCanvas().style.cursor = 'pointer'
@@ -181,7 +184,7 @@ export default function SicilyMap() {
     return () => {
       map.current?.remove()
     }
-  }, [])
+  }, [handleCellClick])
 
   return (
     <div className="h-screen w-full relative">
