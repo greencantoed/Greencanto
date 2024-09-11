@@ -1,20 +1,28 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import Link from 'next/link'
+
+const SicilyMap = dynamic(() => import('@/components/SicilyMap'), {
+  loading: () => <p>Caricamento mappa...</p>,
+  ssr: false
+})
 
 export default function PrivatePage() {
   return (
-    <div className="min-h-screen bg-[#f4f4f4] flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold text-[#2d677d] mb-4">Pagina Privata</h1>
-        <p className="text-[#2d677d] mb-4">Benvenuto nella sezione privata di Greencanto.</p>
-        <Link href="/" passHref legacyBehavior>
-          <Button className="bg-[#d76a03] text-white hover:bg-[#f27d0c]">
-            Torna alla Home
-          </Button>
-        </Link>
-      </div>
+    <div className="h-screen flex flex-col">
+      <header className="bg-[#2d677d] text-white p-4">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Greencanto - Area Privata</h1>
+          <Link href="/" passHref>
+            <Button variant="outline">Torna alla Home</Button>
+          </Link>
+        </div>
+      </header>
+      <main className="flex-grow">
+        <SicilyMap />
+      </main>
     </div>
   )
 }
