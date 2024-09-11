@@ -15,7 +15,7 @@ const projects: Project[] = [
   { id: '3', name: 'Energia Solare Palermo' },
 ]
 
-export function SrcComponentsFloatingMenu() {
+export function FloatingMenu() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (

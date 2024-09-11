@@ -30,7 +30,7 @@ const initialPosts: Post[] = [
   },
 ]
 
-export function SrcComponentsCommunityBlog() {
+export function CommunityBlog() {
   const [posts, setPosts] = useState<Post[]>(initialPosts)
   const [newComment, setNewComment] = useState('')
 
@@ -87,4 +87,4 @@ export function SrcComponentsCommunityBlog() {
       ))}
     </div>
   )
-}
+} 
