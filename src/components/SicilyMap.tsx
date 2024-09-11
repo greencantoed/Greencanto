@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState, useCallback } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import * as turf from '@turf/turf'
-import { Position } from '@turf/helpers'
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoia2FheWFyZG8iLCJhIjoiY2xmd3J0dDcyMGZmeTNmbzBvcGt4bWhpZCJ9.YVXSKaOOTcQNwqYXhfRH0Q'
 
@@ -100,7 +99,7 @@ export default function SicilyMap() {
         const grid = turf.squareGrid(bbox, cellSide, options)
 
         grid.features.forEach((cell, cellIndex) => {
-          const cellPolygon = turf.polygon(cell.geometry.coordinates as Position[][])
+          const cellPolygon = turf.polygon(cell.geometry.coordinates as turf.helpers.Position[][])
           const intersection = turf.intersect(cellPolygon, polygon)
           if (intersection) {
             allCells.push({
