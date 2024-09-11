@@ -5,12 +5,24 @@ import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, Menu, Zap, Leaf, Users } from "lucide-react"
 import Image from 'next/image'
 import Link from 'next/link'
-import { Archivo_Black } from 'next/font/google'
+import { Archivo_Black, Quattrocento_Sans, Lato } from 'next/font/google'
 
 const archivoBlack = Archivo_Black({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-archivo-black',
+})
+
+const quattrocentoSans = Quattrocento_Sans({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-quattrocento-sans',
+})
+
+const lato = Lato({
+  weight: ['400', '700', '900'],
+  subsets: ['latin'],
+  variable: '--font-lato',
 })
 
 export default function Home() {
@@ -60,7 +72,7 @@ export default function Home() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4]">
+    <div className={`${quattrocentoSans.variable} font-quattrocento-sans min-h-screen bg-[#f4f4f4]`}>
       {/* Navigation */}
       <nav className="bg-[#2d677d] text-white p-4 sticky top-0 z-10 backdrop-blur-lg bg-opacity-80">
         <div className="container mx-auto flex justify-between items-center">
