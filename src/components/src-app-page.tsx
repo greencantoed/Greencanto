@@ -25,7 +25,7 @@ const lato = Lato({
   variable: '--font-lato',
 })
 
-export default function Home() {
+export function SrcAppPage() {
   const [activeSection, setActiveSection] = useState('home')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -101,8 +101,8 @@ export default function Home() {
       {/* Content sections */}
       <main className="space-y-24 pt-16">
         {/* Home section */}
-        <section id="home" className="min-h-screen flex items-center justify-center p-8 bg-cover bg-center relative overflow-hidden" style={{backgroundImage: 'url("/background.svg")'}}>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2d677d] to-transparent opacity-80"></div>
+        <section id="home" className="min-h-screen flex items-center justify-center p-8 bg-cover bg-center relative overflow-hidden" style={{backgroundImage: 'url("/landingpagefarmer.svg")'}}>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2d677d] via-[#2d677d80] to-transparent"></div>
           <div className="absolute inset-0 bg-[url('/grain.svg')] opacity-20 animate-[grain_8s_steps(10)_infinite]"></div>
           <div className="relative z-10 text-white max-w-4xl mx-auto">
             <h1 className="font-archivo-black text-5xl font-bold mb-6 leading-tight">Rigeneriamo l'agricoltura Siciliana</h1>
