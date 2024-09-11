@@ -6,28 +6,6 @@ import Image from 'next/image'
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#f4f4f4]">
-      {/* Navigation */}
-      <nav className="bg-[#2d677d] text-white p-4 sticky top-0 z-10">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Greencanto</h1>
-          <div className="space-x-4">
-            <Link href="#mission" passHref>
-              <Button variant="ghost">La Nostra Missione</Button>
-            </Link>
-            <Link href="#who" passHref>
-              <Button variant="ghost">Chi Siamo</Button>
-            </Link>
-            <Link href="#join" passHref>
-              <Button variant="ghost">Unisciti a Noi</Button>
-            </Link>
-            <Link href="#contact" passHref>
-              <Button variant="ghost">Contattaci</Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* Content sections */}
       <main className="space-y-24">
         {/* Home section */}
         <section id="home" className="min-h-screen flex items-center justify-center p-8 bg-cover bg-center relative" style={{backgroundImage: 'url("/placeholder.svg?height=1080&width=1920")'}}>
@@ -133,13 +111,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-[#2d677d] text-white py-8">
-        <div className="container mx-auto px-8 text-center">
-          <p>&copy; {new Date().getFullYear()} Greencanto. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   )
 }
