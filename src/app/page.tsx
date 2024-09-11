@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, Menu, Zap, Leaf, Users } from "lucide-react"
 import Image from 'next/image'
 import Link from 'next/link'
+import { Archivo_Black } from 'next/font/google'
+
+const archivoBlack = Archivo_Black({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-archivo-black',
+})
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('home')
@@ -57,7 +64,7 @@ export default function Home() {
       {/* Navigation */}
       <nav className="bg-[#2d677d] text-white p-4 sticky top-0 z-10 backdrop-blur-lg bg-opacity-80">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Greencanto</h1>
+          <h1 className={`${archivoBlack.variable} font-archivo-black text-2xl font-bold`}>Greencanto</h1>
           <div className="md:hidden">
             <Button variant="ghost" onClick={() => setMenuOpen(!menuOpen)}>
               <Menu className="h-6 w-6" />
@@ -66,7 +73,7 @@ export default function Home() {
           <ul className={`md:flex space-y-2 md:space-y-0 md:space-x-4 ${menuOpen ? 'block absolute top-full left-0 right-0 bg-[#2d677d] p-4' : 'hidden md:block'}`}>
             {navItems.map((item, index) => (
               <li key={index}>
-                <Button
+                <Button      
                   variant="ghost"
                   className={`text-white hover:text-[#d76a03] ${activeSection === item.id ? 'bg-[#d76a03] text-white' : ''}`}
                   onClick={() => scrollTo(item.id)}
@@ -86,7 +93,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#2d677d] to-transparent opacity-80"></div>
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjEuNSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=')] opacity-20 animate-[grain_8s_steps(10)_infinite]"></div>
           <div className="relative z-10 text-white max-w-4xl mx-auto">
-            <h1 className="text-5xl font-bold mb-6 leading-tight">Rigeneriamo l'agricoltura Siciliana</h1>
+            <h1 className={`${archivoBlack.variable} font-archivo-black text-5xl font-bold mb-6 leading-tight`}>Rigeneriamo l'agricoltura Siciliana</h1>
             <p className="text-xl mb-8">
               Greencanto ha come obiettivo il recupero e la messa a produttività di terreni incolti ed abbandonati Siciliani, con il fine ultimo di realizzare progetti agri-voltaici serializzati e sostenibili. Unisciti a noi per immaginare una Sicilia più verde.
             </p>
@@ -101,7 +108,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto px-8">
             <div className="flex items-center mb-8">
               <Zap className="w-12 h-12 text-[#d76a03] mr-4" />
-              <h2 className="text-4xl font-bold text-[#2d677d]">La Nostra Missione</h2>
+              <h2 className={`${archivoBlack.variable} font-archivo-black text-4xl font-bold text-[#2d677d]`}>La Nostra Missione</h2>
             </div>
             <p className="text-[#2d677d] text-xl leading-relaxed">
               La nostra missione è chiara: rigenerare terreni abbandonati e farli rifiorire grazie a investimenti sostenibili. Offriamo agli utenti l'opportunità di acquistare quote di aziende agricole, promuovendo un'agricoltura innovativa e sostenibile. Parallelamente, sosteniamo progetti di riqualificazione ambientale, con un focus speciale sulla Sicilia.
@@ -114,7 +121,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto px-8">
             <div className="flex items-center mb-8">
               <Users className="w-12 h-12 text-[#d76a03] mr-4" />
-              <h2 className="text-4xl font-bold text-[#2d677d]">Chi Siamo</h2>
+              <h2 className={`${archivoBlack.variable} font-archivo-black text-4xl font-bold text-[#2d677d]`}>Chi Siamo</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-16">
               <div>
@@ -127,7 +134,7 @@ export default function Home() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h3 className="text-2xl font-bold text-[#2d677d] mb-4">Edoardo Lorenzo Cumitini</h3>
+                <h3 className={`${archivoBlack.variable} font-archivo-black text-2xl font-bold text-[#2d677d] mb-4`}>Edoardo Lorenzo Cumitini</h3>
                 <p className="text-[#2d677d] text-lg">
                   PhD candidate in Social Sciences at University of Hamburg, con expertise in Geografia Economica. La sua visione e conoscenza guidano l'approccio innovativo di Greencanto nel connettere agricoltura sostenibile e energia rinnovabile.
                 </p>
@@ -142,7 +149,7 @@ export default function Home() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h3 className="text-2xl font-bold text-[#2d677d] mb-4">Giuseppe Marletta</h3>
+                <h3 className={`${archivoBlack.variable} font-archivo-black text-2xl font-bold text-[#2d677d] mb-4`}>Giuseppe Marletta</h3>
                 <p className="text-[#2d677d] text-lg">
                   Avvocato e agro-imprenditore. La sua esperienza legale e imprenditoriale nel settore agricolo è fondamentale per guidare Greencanto attraverso le complessità normative e operative dei progetti agrivoltaici.
                 </p>
@@ -156,7 +163,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto px-8 text-center">
             <div className="flex items-center justify-center mb-8">
               <Leaf className="w-12 h-12 text-[#d76a03] mr-4" />
-              <h2 className="text-4xl font-bold">Unisciti a Noi</h2>
+              <h2 className={`${archivoBlack.variable} font-archivo-black text-4xl font-bold`}>Unisciti a Noi</h2>
             </div>
             <p className="text-xl mb-10 leading-relaxed">
               Greencanto non è solo un'opportunità di investimento; è una comunità di persone che credono in un futuro più sostenibile. Con il supporto del nostro team esperto, ci impegniamo a trasformare terreni abbandonati in risorse produttive, offrendo un ritorno economico tangibile ai nostri investitori e un impatto positivo sull'ambiente.
@@ -172,7 +179,7 @@ export default function Home() {
         {/* Contacts section */}
         <section id="contact" className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-8">
-            <h2 className="text-4xl font-bold text-[#2d677d] mb-8">Contattaci</h2>
+            <h2 className={`${archivoBlack.variable} font-archivo-black text-4xl font-bold text-[#2d677d] mb-8`}>Contattaci</h2>
             <form className="space-y-6">
               <input type="text" placeholder="Nome" required className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2d677d]" />
               <input type="email" placeholder="Email" required className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2d677d]" />
@@ -187,7 +194,7 @@ export default function Home() {
         {/* FAQ section */}
         <section id="faq" className="py-24 bg-[#f8f8f8]">
           <div className="max-w-4xl mx-auto px-8">
-            <h2 className="text-4xl font-bold text-[#2d677d] mb-8">Domande Frequenti</h2>
+            <h2 className={`${archivoBlack.variable} font-archivo-black text-4xl font-bold text-[#2d677d] mb-8`}>Domande Frequenti</h2>
             <div className="space-y-6">
               {[
                 {
@@ -205,7 +212,7 @@ export default function Home() {
               ].map((faq, index) => (
                 <div key={index} className="border-b border-gray-300 pb-4">
                   <button
-                    className="flex justify-between items-center w-full text-left font-bold text-[#2d677d] text-xl"
+                    className={`${archivoBlack.variable} font-archivo-black flex justify-between items-center w-full text-left font-bold text-[#2d677d] text-xl`}
                     onClick={() => toggleFaq(index)}
                   >
                     {faq.question}
