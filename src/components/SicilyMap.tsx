@@ -22,7 +22,8 @@ const landParcels = [
       [14.915404, 37.503990],
       [14.913262, 37.504272],
       [14.912478, 37.504563],
-      [14.91118664972715, 37.5039488183456]
+      [14.91118664972715, 37.5039488183456],
+      [14.908150559846465, 37.503217061923806] // Close the polygon
     ]
   },
   {
@@ -34,7 +35,8 @@ const landParcels = [
       [14.916455, 37.501727],
       [14.91684296960928, 37.503105905104434],
       [14.915512593937905, 37.50364212161175],
-      [14.913702, 37.501844]
+      [14.913702, 37.501844],
+      [14.911509, 37.500961] // Close the polygon
     ]
   },
   {
@@ -45,7 +47,8 @@ const landParcels = [
       [14.723139, 37.448083],
       [14.726673, 37.442245],
       [14.7263289, 37.4416815],
-      [14.722852, 37.447178]
+      [14.722852, 37.447178],
+      [14.719277, 37.454194] // Close the polygon
     ]
   }
 ]
@@ -99,12 +102,12 @@ export default function SicilyMap() {
         const grid = turf.squareGrid(bbox, cellSide, options)
 
         grid.features.forEach((cell, cellIndex) => {
-          const cellPolygon = turf.polygon(cell.geometry.coordinates as number[][][])
-          const intersection = turf.intersect(cellPolygon, polygon)
+          const cellPolygon = turf.polygon(cell.geometry.coordinates)
+          const intersection = turf.booleanIntersects(cellPolygon, polygon)
           if (intersection) {
             allCells.push({
               id: `${parcel.id}-${cellIndex}`,
-              coordinates: cell.geometry.coordinates[0] as number[][]
+              coordinates: cell.geometry.coordinates[0]
             })
           }
         })
