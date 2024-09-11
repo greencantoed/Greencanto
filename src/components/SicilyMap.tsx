@@ -99,7 +99,7 @@ export default function SicilyMap() {
         const grid = turf.squareGrid(bbox, cellSide, options)
 
         grid.features.forEach((cell, cellIndex) => {
-          const cellPolygon = turf.polygon(cell.geometry.coordinates as turf.helpers.Position[][])
+          const cellPolygon = turf.polygon(cell.geometry.coordinates as number[][][])
           const intersection = turf.intersect(cellPolygon, polygon)
           if (intersection) {
             allCells.push({
