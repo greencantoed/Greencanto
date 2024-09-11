@@ -30,7 +30,7 @@ export default function SicilyMap() {
         zoom: 7
       }}
       style={{width: '100vw', height: '100vh'}}
-      mapStyle="mapbox://styles/mapbox/streets-v11"
+      mapStyle="mapbox://styles/mapbox/satellite-v9"
       mapboxAccessToken={MAPBOX_TOKEN}
     >
       {projects.map((project) => (
