@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button"
 import { ChevronDown, Zap, Leaf, Users, Send } from "lucide-react"
 import Image from 'next/image'
 import EnricoLanding from '@/components/EnricoLanding'
-import { motion } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
+import { ReactNode } from 'react'
+import { motion } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
 
-const FadeInSection = ({ children }) => {
+const FadeInSection = ({ children }: { children: ReactNode }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -28,6 +29,8 @@ const FadeInSection = ({ children }) => {
     </motion.div>
   )
 }
+
+// ... rest of the file remains the same
 
 export default function Home() {
   return (
