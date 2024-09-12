@@ -4,9 +4,10 @@ import React, { useRef, useEffect, useState } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-mapboxgl.accessToken = 'pk.eyJ1Ijoia2FheWFyZG8iLCJhIjoiY2xmd3J0dDcyMGZmeTNmbzBvcGt4bWhpZCJ9.YVXSKaOOTcQNwqYXhfRH0Q'
+// It's better to use environment variables for API keys
+const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoia2FheWFyZG8iLCJhIjoiY2xmd3J0dDcyMGZmeTNmbzBvcGt4bWhpZCJ9.YVXSKaOOTcQNwqYXhfRH0Q'
+mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
-// Define the type for the polygon properties
 type PolygonFeature = {
   type: 'Feature'
   properties: {
@@ -18,10 +19,7 @@ type PolygonFeature = {
   }
 }
 
-const POLYGON_DATA: {
-  type: 'FeatureCollection'
-  features: PolygonFeature[]
-} = {
+const POLYGON_DATA: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
   type: 'FeatureCollection',
   features: [
     {
@@ -81,6 +79,7 @@ const MapboxPolygonGrid: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const map = useRef<mapboxgl.Map | null>(null)
   const [selectedPolygon, setSelectedPolygon] = useState<number | null>(null)
+  const [mapLoaded, setMapLoaded] = useState(false)
 
   useEffect(() => {
     if (map.current) return // initialize map only once
@@ -92,7 +91,7 @@ const MapboxPolygonGrid: React.FC = () => {
       zoom: 10
     })
 
-    map.current.on('load', () => {
+    const initializeMap = () => {
       if (!map.current) return
 
       map.current.addSource('polygons', {
@@ -130,45 +129,58 @@ const MapboxPolygonGrid: React.FC = () => {
         }
       })
 
-      // Add click event
-      map.current.on('click', 'polygon-fills', (e) => {
-        if (e.features && e.features.length > 0) {
-          const clickedId = e.features[0].properties?.id as number
-          
-          if (selectedPolygon !== null) {
-            map.current!.setFeatureState(
-              { source: 'polygons', id: selectedPolygon },
-              { selected: false }
-            )
-          }
-
-          if (selectedPolygon !== clickedId) {
-            map.current!.setFeatureState(
-              { source: 'polygons', id: clickedId },
-              { selected: true }
-            )
-            setSelectedPolygon(clickedId)
-          } else {
-            setSelectedPolygon(null)
-          }
-        }
-      })
-
-      // Change cursor on hover
+      map.current.on('click', 'polygon-fills', handlePolygonClick)
       map.current.on('mouseenter', 'polygon-fills', () => {
-        if (map.current) {
-          map.current.getCanvas().style.cursor = 'pointer'
-        }
+        if (map.current) map.current.getCanvas().style.cursor = 'pointer'
       })
       map.current.on('mouseleave', 'polygon-fills', () => {
-        if (map.current) {
-          map.current.getCanvas().style.cursor = ''
-        }
+        if (map.current) map.current.getCanvas().style.cursor = ''
       })
-    })
 
-    return () => map.current?.remove()
+      setMapLoaded(true)
+    }
+
+    map.current.on('load', initializeMap)
+
+    return () => {
+      if (map.current) {
+        map.current.off('click', 'polygon-fills', handlePolygonClick)
+        map.current.remove()
+      }
+      setMapLoaded(false)
+    }
   }, [])
+
+  const handlePolygonClick = (e: mapboxgl.MapMouseEvent & { features?: mapboxgl.MapboxGeoJSONFeature[] }) => {
+    if (e.features && e.features.length > 0 && map.current) {
+      const clickedId = e.features[0].properties?.id as number
+
+      if (selectedPolygon !== null) {
+        map.current.setFeatureState(
+          { source: 'polygons', id: selectedPolygon },
+          { selected: false }
+        )
+      }
+
+      if (selectedPolygon !== clickedId) {
+        map.current.setFeatureState(
+          { source: 'polygons', id: clickedId },
+          { selected: true }
+        )
+        setSelectedPolygon(clickedId)
+      } else {
+        setSelectedPolygon(null)
+      }
+    }
+  }
+
+  if (!mapLoaded) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-gray-100">
+        <div className="text-2xl font-semibold text-gray-700">Loading map...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="h-screen w-full relative">
