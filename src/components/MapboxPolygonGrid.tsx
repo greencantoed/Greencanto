@@ -4,9 +4,11 @@ import React, { useRef, useEffect, useState } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-// It's better to use environment variables for API keys
-const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoia2FheWFyZG8iLCJhIjoiY2xmd3J0dDcyMGZmeTNmbzBvcGt4bWhpZCJ9.YVXSKaOOTcQNwqYXhfRH0Q'
-mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
+const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+if (!MAPBOX_ACCESS_TOKEN) {
+  console.error('Mapbox access token is not defined in environment variables')
+}
+mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN || ''
 
 const POLYGON_DATA: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
   type: 'FeatureCollection',
@@ -65,95 +67,103 @@ const POLYGON_DATA: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
 }
 
 const MapboxPolygonGrid: React.FC = () => {
-  const mapContainer = useRef<HTMLDivElement | null>(null)
+  const mapContainer = useRef<HTMLDivElement>(null)
   const map = useRef<mapboxgl.Map | null>(null)
   const [selectedPolygon, setSelectedPolygon] = useState<number | null>(null)
   const [mapLoaded, setMapLoaded] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (map.current) return // initialize map only once
+    if (map.current || !mapContainer.current) return
 
     console.log('Initializing map...')
 
-    try {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current!,
-        style: 'mapbox://styles/mapbox/satellite-v9',
-        center: [14.8, 37.48],
-        zoom: 10
-      })
+    const initializeMap = async () => {
+      try {
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/satellite-v9',
+          center: [14.8, 37.48],
+          zoom: 10
+        })
 
-      console.log('Map instance created successfully')
+        console.log('Map instance created successfully')
 
-      const initializeMap = () => {
-        if (!map.current) {
-          console.error('Map instance is null')
-          setError('Failed to initialize map')
-          return
-        }
+        map.current.on('load', () => {
+          if (!map.current) {
+            console.error('Map instance is null')
+            setError('Failed to initialize map')
+            return
+          }
 
-        console.log('Adding source and layers...')
+          console.log('Adding source and layers...')
 
-        try {
-          map.current.addSource('polygons', {
-            type: 'geojson',
-            data: POLYGON_DATA
-          })
+          try {
+            map.current.addSource('polygons', {
+              type: 'geojson',
+              data: POLYGON_DATA
+            })
 
-          map.current.addLayer({
-            id: 'polygon-fills',
-            type: 'fill',
-            source: 'polygons',
-            paint: {
-              'fill-color': [
-                'case',
-                ['boolean', ['feature-state', 'selected'], false],
-                '#4CAF50',
-                '#3388ff'
-              ],
-              'fill-opacity': [
-                'case',
-                ['boolean', ['feature-state', 'selected'], false],
-                0.8,
-                0.4
-              ]
-            }
-          })
+            map.current.addLayer({
+              id: 'polygon-fills',
+              type: 'fill',
+              source: 'polygons',
+              paint: {
+                'fill-color': [
+                  'case',
+                  ['boolean', ['feature-state', 'selected'], false],
+                  '#4CAF50',
+                  '#3388ff'
+                ],
+                'fill-opacity': [
+                  'case',
+                  ['boolean', ['feature-state', 'selected'], false],
+                  0.8,
+                  0.4
+                ]
+              }
+            })
 
-          map.current.addLayer({
-            id: 'polygon-borders',
-            type: 'line',
-            source: 'polygons',
-            paint: {
-              'line-color': '#ffffff',
-              'line-width': 2
-            }
-          })
+            map.current.addLayer({
+              id: 'polygon-borders',
+              type: 'line',
+              source: 'polygons',
+              paint: {
+                'line-color': '#ffffff',
+                'line-width': 2
+              }
+            })
 
-          console.log('Layers added successfully')
+            console.log('Layers added successfully')
 
-          map.current.on('click', 'polygon-fills', handlePolygonClick)
-          map.current.on('mouseenter', 'polygon-fills', () => {
-            if (map.current) map.current.getCanvas().style.cursor = 'pointer'
-          })
-          map.current.on('mouseleave', 'polygon-fills', () => {
-            if (map.current) map.current.getCanvas().style.cursor = ''
-          })
+            map.current.on('click', 'polygon-fills', handlePolygonClick)
+            map.current.on('mouseenter', 'polygon-fills', () => {
+              if (map.current) map.current.getCanvas().style.cursor = 'pointer'
+            })
+            map.current.on('mouseleave', 'polygon-fills', () => {
+              if (map.current) map.current.getCanvas().style.cursor = ''
+            })
 
-          setMapLoaded(true)
-          console.log('Map fully initialized')
-        } catch (err) {
-          console.error('Error adding layers:', err)
-          setError('Failed to add map layers')
-        }
+            setMapLoaded(true)
+            console.log('Map fully initialized')
+          } catch (err) {
+            console.error('Error adding layers:', err)
+            setError('Failed to add map layers')
+          }
+        })
+
+        map.current.on('error', (e) => {
+          console.error('Mapbox error:', e)
+          setError(`Mapbox error: ${e.error.message}`)
+        })
+
+      } catch (err) {
+        console.error('Error creating map instance:', err)
+        setError(`Failed to create map instance: ${err instanceof Error ? err.message : String(err)}`)
       }
-
-      map.current.on('load', initializeMap)
-    } catch (err) {
-      console.error('Error creating map instance:', err)
-      setError('Failed to create map instance')
     }
+
+    initializeMap()
 
     return () => {
       console.log('Cleaning up map...')
@@ -182,49 +192,4 @@ const MapboxPolygonGrid: React.FC = () => {
           { source: 'polygons', id: clickedId },
           { selected: true }
         )
-        setSelectedPolygon(clickedId)
-      } else {
-        setSelectedPolygon(null)
-      }
-    }
-  }
-
-  if (error) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-red-100">
-        <div className="text-center p-8 bg-white rounded-lg shadow-md">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Error Loading Map</h1>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={() => window.location.reload()}
-          >
-            Reload Page
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  if (!mapLoaded) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-gray-100">
-        <div className="text-2xl font-semibold text-gray-700">Loading map...</div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="h-screen w-full relative">
-      <div ref={mapContainer} className="absolute inset-0" />
-      {selectedPolygon !== null && (
-        <div className="absolute top-4 left-4 bg-white p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-2">Selected Polygon</h2>
-          <p>ID: {selectedPolygon}</p>
-        </div>
-      )}
-    </div>
-  )
-}
-
-export default MapboxPolygonGrid
+        setSelectedPolygon(clickedI
