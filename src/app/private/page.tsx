@@ -1,14 +1,16 @@
 'use client'
 
-import React from 'react'
-import MapboxPolygonGrid from '@/components/MapboxPolygonGrid'
+import dynamic from 'next/dynamic';
 
-const PrivatePage: React.FC = () => {
+const MapboxPolygonGrid = dynamic(() => import('../components/MapboxPolygonGrid'), { ssr: false });
+
+const HomePage = () => {
   return (
-    <div className="h-screen w-full">
+    <div>
+      <h1>Mapbox with Polygon Grid</h1>
       <MapboxPolygonGrid />
     </div>
-  )
-}
+  );
+};
 
-export default PrivatePage
+export default HomePage;
