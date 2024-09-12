@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useCallback } from 'react'
 import type { Map as MapboxMap, MapboxGeoJSONFeature } from 'mapbox-gl'
 
 const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
@@ -70,6 +70,29 @@ const MapboxPolygonGrid: React.FC = () => {
   const [selectedPolygon, setSelectedPolygon] = useState<number | null>(null)
   const [mapLoaded, setMapLoaded] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const handlePolygonClick = useCallback((e: { features?: MapboxGeoJSONFeature[] }) => {
+    if (e.features && e.features.length > 0 && map.current) {
+      const clickedId = e.features[0].properties?.id as number
+
+      if (selectedPolygon !== null) {
+        map.current.setFeatureState(
+          { source: 'polygons', id: selectedPolygon },
+          { selected: false }
+        )
+      }
+
+      if (selectedPolygon !== clickedId) {
+        map.current.setFeatureState(
+          { source: 'polygons', id: clickedId },
+          { selected: true }
+        )
+        setSelectedPolygon(clickedId)
+      } else {
+        setSelectedPolygon(null)
+      }
+    }
+  }, [selectedPolygon])
 
   useEffect(() => {
     if (typeof window === 'undefined' || map.current || !mapContainer.current) return
@@ -154,30 +177,7 @@ const MapboxPolygonGrid: React.FC = () => {
         map.current.remove()
       }
     }
-  }, [])
-
-  const handlePolygonClick = (e: { features?: MapboxGeoJSONFeature[] }) => {
-    if (e.features && e.features.length > 0 && map.current) {
-      const clickedId = e.features[0].properties?.id as number
-
-      if (selectedPolygon !== null) {
-        map.current.setFeatureState(
-          { source: 'polygons', id: selectedPolygon },
-          { selected: false }
-        )
-      }
-
-      if (selectedPolygon !== clickedId) {
-        map.current.setFeatureState(
-          { source: 'polygons', id: clickedId },
-          { selected: true }
-        )
-        setSelectedPolygon(clickedId)
-      } else {
-        setSelectedPolygon(null)
-      }
-    }
-  }
+  }, [handlePolygonClick])
 
   if (error) {
     return (
