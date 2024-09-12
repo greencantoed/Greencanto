@@ -1,17 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import dynamic from 'next/dynamic'
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import { Menu, X, LogIn, LogOut } from 'lucide-react'
 import { FloatingMenu } from '@/components/FloatingMenu'
 import { CommunityBlog } from '@/components/CommunityBlog'
-
-const SicilyMap = dynamic(() => import('@/components/SicilyMap'), {
-  loading: () => <p>Caricamento mappa...</p>,
-  ssr: false
-})
+import MapboxPolygonGrid from '@/components/MapboxPolygonGrid'
 
 export default function PrivatePage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -71,7 +66,7 @@ export default function PrivatePage() {
       </aside>
       
       <main className="h-full w-full relative">
-        <SicilyMap />
+        <MapboxPolygonGrid />
         <FloatingMenu />
         {showBlog && isLoggedIn && (
           <div className="absolute inset-0 bg-white/90 overflow-auto z-30">
