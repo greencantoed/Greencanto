@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
+import { defaultConfig } from 'next/dist/server/config-shared'
 
 type Comment = {
   id: string
@@ -30,7 +31,7 @@ const initialPosts: Post[] = [
   },
 ]
 
-export function CommunityBlog() {
+export default function CommunityBlog() {
   const [posts, setPosts] = useState<Post[]>(initialPosts)
   const [newComment, setNewComment] = useState('')
 
