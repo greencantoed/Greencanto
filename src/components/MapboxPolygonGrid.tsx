@@ -160,4 +160,13 @@ const MapboxPolygonGrid: React.FC = () => {
         </div>
       )}
       {selectedPolygon !== null && (
-        <div className="absolute top-4 left-4 bg-white p-4
+        <div className="absolute top-4 left-4 bg-white p-4 rounded shadow">
+          <h2 className="text-lg font-semibold mb-2">Selected Polygon</h2>
+          <p>ID: {selectedPolygon}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default MapboxPolygonGrid;
