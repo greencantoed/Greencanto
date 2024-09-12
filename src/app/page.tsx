@@ -3,12 +3,11 @@ import { Button } from "@/components/ui/button"
 import { ChevronDown, Zap, Leaf, Users } from "lucide-react"
 import Image from 'next/image'
 import EnricoLanding from '@/components/EnricoLanding'
-import Navbar from '@/components/Navbar'
+
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#2d677d] to-[#f4f4f4]">
-      <Navbar />
       <main className="container mx-auto px-4 py-12">
         {/* Home section */}
         <section id="home" className="min-h-screen flex flex-col justify-center">
