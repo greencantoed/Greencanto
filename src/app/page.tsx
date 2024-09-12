@@ -129,7 +129,7 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <EnricoLanding width={1000} height={1000} className="max-w-none h-auto" />
+              <EnricoLanding width={900} height={900} className="max-w-none h-auto" />
             </motion.div>
           </div>
         </section>
