@@ -47,7 +47,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="h-screen overflow-y-auto snap-y snap-mandatory">
+    <div className="min-h-screen bg-gradient-to-b from-[#2d677d] to-[#f4f4f4] overflow-y-auto snap-y snap-mandatory">
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrollY > 50 ? 'bg-[#2d677d] shadow-md' : ''}`}>
         <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold text-white">Greencanto</Link>
@@ -88,55 +88,58 @@ export default function Home() {
         </AnimatePresence>
       </header>
 
-      <main className="bg-gradient-to-b from-[#2d677d] to-[#f4f4f4]">
+      <main>
         {/* Home section */}
-        <section id="home" className="h-screen flex items-center relative overflow-hidden snap-start">
-          <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="z-10"
-            >
-              <h1 className="text-4xl lg:text-6xl font-bold mb-6 text-white leading-tight">
-                Rigeneriamo l'agricoltura Siciliana
-              </h1>
+        <section id="home" className="min-h-screen flex items-center relative overflow-hidden snap-start">
+          <div className="container mx-auto px-4 py-24 flex flex-col lg:flex-row items-center">
+            <div className="lg:w-1/2 z-10">
               <motion.div
-                className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg rounded-3xl shadow-2xl p-8"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
               >
-                <div className="grid gap-6 text-[#00264d] text-lg lg:text-xl">
-                  <p>
-                    Greencanto ha come obiettivo il recupero e la messa a produttività di terreni incolti ed abbandonati Siciliani, con il fine ultimo di realizzare progetti agri-voltaici serializzati e sostenibili.
-                  </p>
-                  <p>
-                    Unisciti a noi per immaginare una Sicilia più verde. Insieme possiamo trasformare l'agricoltura e l'energia rinnovabile in un'opportunità di crescita sostenibile.
-                  </p>
-                </div>
-                <div className="mt-8">
-                  <Link href="#mission" passHref>
-                    <Button variant="outline" className="text-[#2d677d] border-[#2d677d] hover:bg-[#2d677d] hover:text-white text-lg px-8 py-3 w-full lg:w-auto transition-all duration-300">
-                      Scopri di Più <ChevronDown className="ml-2 animate-bounce" />
-                    </Button>
-                  </Link>
-                </div>
+                <h1 className="text-4xl lg:text-6xl font-bold mb-6 text-white leading-tight">
+                  Rigeneriamo l'agricoltura Siciliana
+                </h1>
+                <motion.div
+                  className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg rounded-3xl shadow-2xl p-8"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="grid gap-6 text-[#00264d] text-lg lg:text-xl">
+                    <p>
+                      Greencanto ha come obiettivo il recupero e la messa a produttività di terreni incolti ed abbandonati Siciliani, con il fine ultimo di realizzare progetti agri-voltaici serializzati e sostenibili.
+                    </p>
+                    <p>
+                      Unisciti a noi per immaginare una Sicilia più verde. Insieme possiamo trasformare l'agricoltura e l'energia rinnovabile in un'opportunità di crescita sostenibile.
+                    </p>
+                  </div>
+                  <div className="mt-8">
+                    <Link href="#mission" passHref>
+                      <Button variant="outline" className="text-[#2d677d] border-[#2d677d] hover:bg-[#2d677d] hover:text-white text-lg px-8 py-3 w-full lg:w-auto transition-all duration-300">
+                        Scopri di Più <ChevronDown className="ml-2 animate-bounce" />
+                      </Button>
+                    </Link>
+                  </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
-            <motion.div
-              className="absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-1/4 hidden lg:block"
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <EnricoLanding width={900} height={900} className="max-w-none h-auto" />
-            </motion.div>
+            </div>
+            <div className="lg:w-1/2 mt-12 lg:mt-0">
+              <motion.div
+                className="relative w-full h-[450px]"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <EnricoLanding width={900} height={900} className="absolute top-0 right-0 w-full h-full object-contain" />
+              </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Mission section */}
         <FadeInSection>
-          <section id="mission" className="min-h-screen py-24 snap-start">
+          <section id="mission" className="py-24 snap-start">
             <div className="container mx-auto px-4">
               <div className="max-w-5xl mx-auto">
                 <div className="flex items-center justify-center mb-12">
@@ -176,7 +179,7 @@ export default function Home() {
 
         {/* Team section */}
         <FadeInSection>
-          <section id="team" className="min-h-screen py-24 snap-start">
+          <section id="team" className="py-24 snap-start">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
@@ -226,7 +229,7 @@ export default function Home() {
 
         {/* Join section */}
         <FadeInSection>
-          <section id="join" className="min-h-screen py-24 snap-start">
+          <section id="join" className="py-24 snap-start">
             <div className="container mx-auto px-4">
               <div className="max-w-3xl mx-auto">
                 <div className="flex items-center justify-center mb-6">
@@ -266,7 +269,7 @@ export default function Home() {
 
         {/* Contact section */}
         <FadeInSection>
-          <section id="contact" className="min-h-screen py-24 snap-start">
+          <section id="contact" className="py-24 snap-start">
             <div className="container mx-auto px-4">
               <div className="max-w-3xl mx-auto">
                 <h2 className="text-4xl lg:text-6xl font-bold text-[#2d677d] mb-6 text-center">Contattaci</h2>
