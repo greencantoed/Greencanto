@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { ReactNode, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { ChevronDown, Zap, Leaf, Users, Send, Menu } from "lucide-react"
@@ -12,7 +12,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
-const FadeInSection = ({ children }) => {
+const FadeInSection = ({ children }: { children: ReactNode }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -30,7 +30,7 @@ const FadeInSection = ({ children }) => {
   )
 }
 
-const NavLink = ({ href, children }) => (
+const NavLink = ({ href, children }: { href: string; children: ReactNode }) => (
   <Link href={href} className="text-white hover:text-[#d76a03] transition-colors duration-200">
     {children}
   </Link>
