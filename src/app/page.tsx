@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { ChevronDown, Zap, Leaf, Users } from "lucide-react"
 import Image from 'next/image'
+import EnricoLanding from '@/components/EnricoLanding'
 
 export default function Home() {
   return (
@@ -9,17 +10,22 @@ export default function Home() {
       <main className="space-y-24">
         {/* Home section */}
         <section id="home" className="min-h-screen flex items-center justify-center p-8 bg-cover bg-center relative" style={{backgroundImage: 'url("/placeholder.svg?height=1080&width=1920")'}}>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2d677d] to-transparent opacity-80"></div>
-          <div className="relative z-10 text-white max-w-4xl mx-auto">
-            <h1 className="text-5xl font-bold mb-6 leading-tight">Rigeneriamo l'agricoltura Siciliana</h1>
-            <p className="text-xl mb-8">
-              Greencanto ha come obiettivo il recupero e la messa a produttività di terreni incolti ed abbandonati Siciliani, con il fine ultimo di realizzare progetti agri-voltaici serializzati e sostenibili. Unisciti a noi per immaginare una Sicilia più verde.
-            </p>
-            <Link href="#mission" passHref>
-              <Button className="bg-[#d76a03] text-white hover:bg-[#f27d0c] text-lg px-8 py-3">
-                Scopri di Più <ChevronDown className="ml-2" />
-              </Button>
-            </Link>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#2d677d] to-white opacity-80"></div>
+          <div className="relative z-10 flex items-center justify-between w-full max-w-6xl mx-auto">
+            <div className="text-white max-w-2xl">
+              <h1 className="text-5xl font-bold mb-6 leading-tight">Rigeneriamo l'agricoltura Siciliana</h1>
+              <p className="text-xl mb-8">
+                Greencanto ha come obiettivo il recupero e la messa a produttività di terreni incolti ed abbandonati Siciliani, con il fine ultimo di realizzare progetti agri-voltaici serializzati e sostenibili. Unisciti a noi per immaginare una Sicilia più verde.
+              </p>
+              <Link href="#mission" passHref>
+                <Button className="bg-[#d76a03] text-white hover:bg-[#f27d0c] text-lg px-8 py-3">
+                  Scopri di Più <ChevronDown className="ml-2" />
+                </Button>
+              </Link>
+            </div>
+            <div className="flex-shrink-0 ml-8">
+              <EnricoLanding width={600} height={600} className="transform translate-x-1/4" />
+            </div>
           </div>
         </section>
 
