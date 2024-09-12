@@ -6,7 +6,22 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoia2FheWFyZG8iLCJhIjoiY2xmd3J0dDcyMGZmeTNmbzBvcGt4bWhpZCJ9.YVXSKaOOTcQNwqYXhfRH0Q'
 
-const POLYGON_DATA = {
+// Define the type for the polygon properties
+type PolygonFeature = {
+  type: 'Feature'
+  properties: {
+    id: number
+  }
+  geometry: {
+    type: 'Polygon'
+    coordinates: number[][][]
+  }
+}
+
+const POLYGON_DATA: {
+  type: 'FeatureCollection'
+  features: PolygonFeature[]
+} = {
   type: 'FeatureCollection',
   features: [
     {
@@ -78,12 +93,14 @@ const MapboxPolygonGrid: React.FC = () => {
     })
 
     map.current.on('load', () => {
-      map.current!.addSource('polygons', {
+      if (!map.current) return
+
+      map.current.addSource('polygons', {
         type: 'geojson',
         data: POLYGON_DATA
       })
 
-      map.current!.addLayer({
+      map.current.addLayer({
         id: 'polygon-fills',
         type: 'fill',
         source: 'polygons',
@@ -103,7 +120,7 @@ const MapboxPolygonGrid: React.FC = () => {
         }
       })
 
-      map.current!.addLayer({
+      map.current.addLayer({
         id: 'polygon-borders',
         type: 'line',
         source: 'polygons',
@@ -114,9 +131,9 @@ const MapboxPolygonGrid: React.FC = () => {
       })
 
       // Add click event
-      map.current!.on('click', 'polygon-fills', (e) => {
+      map.current.on('click', 'polygon-fills', (e) => {
         if (e.features && e.features.length > 0) {
-          const clickedId = e.features[0].properties!.id as number
+          const clickedId = e.features[0].properties?.id as number
           
           if (selectedPolygon !== null) {
             map.current!.setFeatureState(
@@ -138,11 +155,15 @@ const MapboxPolygonGrid: React.FC = () => {
       })
 
       // Change cursor on hover
-      map.current!.on('mouseenter', 'polygon-fills', () => {
-        map.current!.getCanvas().style.cursor = 'pointer'
+      map.current.on('mouseenter', 'polygon-fills', () => {
+        if (map.current) {
+          map.current.getCanvas().style.cursor = 'pointer'
+        }
       })
-      map.current!.on('mouseleave', 'polygon-fills', () => {
-        map.current!.getCanvas().style.cursor = ''
+      map.current.on('mouseleave', 'polygon-fills', () => {
+        if (map.current) {
+          map.current.getCanvas().style.cursor = ''
+        }
       })
     })
 
