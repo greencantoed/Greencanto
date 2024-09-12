@@ -37,6 +37,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="it" className={`${archivoBlack.variable} ${quattrocentoSans.variable} ${lato.variable}`}>
+      <head>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+      </head>
       <body className={`${quattrocentoSans.className} flex flex-col min-h-screen`}>
         <header className="bg-[#2d677d] text-white p-4 sticky top-0 z-10">
           <nav className="container mx-auto flex justify-between items-center">
