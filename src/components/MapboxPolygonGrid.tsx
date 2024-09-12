@@ -192,4 +192,49 @@ const MapboxPolygonGrid: React.FC = () => {
           { source: 'polygons', id: clickedId },
           { selected: true }
         )
-        setSelectedPolygon(clickedI
+        setSelectedPolygon(clickedId)
+      } else {
+        setSelectedPolygon(null)
+      }
+    }
+  }
+
+  if (error) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-red-100">
+        <div className="text-center p-8 bg-white rounded-lg shadow-md">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Error Loading Map</h1>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={() => window.location.reload()}
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!mapLoaded) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-gray-100">
+        <div className="text-2xl font-semibold text-gray-700">Loading map...</div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="h-screen w-full relative">
+      <div ref={mapContainer} className="absolute inset-0" />
+      {selectedPolygon !== null && (
+        <div className="absolute top-4 left-4 bg-white p-4 rounded shadow">
+          <h2 className="text-lg font-semibold mb-2">Selected Polygon</h2>
+          <p>ID: {selectedPolygon}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default MapboxPolygonGrid
