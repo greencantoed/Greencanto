@@ -1,14 +1,12 @@
 'use client'
 
 import React, { useRef, useEffect, useState } from 'react'
-import mapboxgl from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import type { Map as MapboxMap, MapboxGeoJSONFeature } from 'mapbox-gl'
 
 const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
 if (!MAPBOX_ACCESS_TOKEN) {
   console.error('Mapbox access token is not defined in environment variables')
 }
-mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN || ''
 
 const POLYGON_DATA: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
   type: 'FeatureCollection',
@@ -68,91 +66,77 @@ const POLYGON_DATA: GeoJSON.FeatureCollection<GeoJSON.Polygon> = {
 
 const MapboxPolygonGrid: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null)
-  const map = useRef<mapboxgl.Map | null>(null)
+  const map = useRef<MapboxMap | null>(null)
   const [selectedPolygon, setSelectedPolygon] = useState<number | null>(null)
   const [mapLoaded, setMapLoaded] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (map.current || !mapContainer.current) return
-
-    console.log('Initializing map...')
+    if (typeof window === 'undefined' || map.current || !mapContainer.current) return
 
     const initializeMap = async () => {
       try {
-        map.current = new mapboxgl.Map({
+        const mapboxgl = (await import('mapbox-gl')).default
+        mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN || ''
+
+        const newMap = new mapboxgl.Map({
           container: mapContainer.current,
           style: 'mapbox://styles/mapbox/satellite-v9',
           center: [14.8, 37.48],
           zoom: 10
         })
 
-        console.log('Map instance created successfully')
+        newMap.on('load', () => {
+          if (!newMap) return
 
-        map.current.on('load', () => {
-          if (!map.current) {
-            console.error('Map instance is null')
-            setError('Failed to initialize map')
-            return
-          }
+          newMap.addSource('polygons', {
+            type: 'geojson',
+            data: POLYGON_DATA
+          })
 
-          console.log('Adding source and layers...')
+          newMap.addLayer({
+            id: 'polygon-fills',
+            type: 'fill',
+            source: 'polygons',
+            paint: {
+              'fill-color': [
+                'case',
+                ['boolean', ['feature-state', 'selected'], false],
+                '#4CAF50',
+                '#3388ff'
+              ],
+              'fill-opacity': [
+                'case',
+                ['boolean', ['feature-state', 'selected'], false],
+                0.8,
+                0.4
+              ]
+            }
+          })
 
-          try {
-            map.current.addSource('polygons', {
-              type: 'geojson',
-              data: POLYGON_DATA
-            })
+          newMap.addLayer({
+            id: 'polygon-borders',
+            type: 'line',
+            source: 'polygons',
+            paint: {
+              'line-color': '#ffffff',
+              'line-width': 2
+            }
+          })
 
-            map.current.addLayer({
-              id: 'polygon-fills',
-              type: 'fill',
-              source: 'polygons',
-              paint: {
-                'fill-color': [
-                  'case',
-                  ['boolean', ['feature-state', 'selected'], false],
-                  '#4CAF50',
-                  '#3388ff'
-                ],
-                'fill-opacity': [
-                  'case',
-                  ['boolean', ['feature-state', 'selected'], false],
-                  0.8,
-                  0.4
-                ]
-              }
-            })
+          newMap.on('click', 'polygon-fills', handlePolygonClick)
+          newMap.on('mouseenter', 'polygon-fills', () => {
+            if (newMap) newMap.getCanvas().style.cursor = 'pointer'
+          })
+          newMap.on('mouseleave', 'polygon-fills', () => {
+            if (newMap) newMap.getCanvas().style.cursor = ''
+          })
 
-            map.current.addLayer({
-              id: 'polygon-borders',
-              type: 'line',
-              source: 'polygons',
-              paint: {
-                'line-color': '#ffffff',
-                'line-width': 2
-              }
-            })
-
-            console.log('Layers added successfully')
-
-            map.current.on('click', 'polygon-fills', handlePolygonClick)
-            map.current.on('mouseenter', 'polygon-fills', () => {
-              if (map.current) map.current.getCanvas().style.cursor = 'pointer'
-            })
-            map.current.on('mouseleave', 'polygon-fills', () => {
-              if (map.current) map.current.getCanvas().style.cursor = ''
-            })
-
-            setMapLoaded(true)
-            console.log('Map fully initialized')
-          } catch (err) {
-            console.error('Error adding layers:', err)
-            setError('Failed to add map layers')
-          }
+          map.current = newMap
+          setMapLoaded(true)
         })
 
-        map.current.on('error', (e) => {
+        newMap.on('error', (e) => {
           console.error('Mapbox error:', e)
           setError(`Mapbox error: ${e.error.message}`)
         })
@@ -166,17 +150,13 @@ const MapboxPolygonGrid: React.FC = () => {
     initializeMap()
 
     return () => {
-      console.log('Cleaning up map...')
       if (map.current) {
-        map.current.off('click', 'polygon-fills', handlePolygonClick)
         map.current.remove()
       }
-      setMapLoaded(false)
     }
   }, [])
 
-  const handlePolygonClick = (e: mapboxgl.MapMouseEvent & { features?: mapboxgl.MapboxGeoJSONFeature[] }) => {
-    console.log('Polygon clicked:', e.features)
+  const handlePolygonClick = (e: { features?: MapboxGeoJSONFeature[] }) => {
     if (e.features && e.features.length > 0 && map.current) {
       const clickedId = e.features[0].properties?.id as number
 
@@ -216,17 +196,14 @@ const MapboxPolygonGrid: React.FC = () => {
     )
   }
 
-  if (!mapLoaded) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-gray-100">
-        <div className="text-2xl font-semibold text-gray-700">Loading map...</div>
-      </div>
-    )
-  }
-
   return (
     <div className="h-screen w-full relative">
       <div ref={mapContainer} className="absolute inset-0" />
+      {!mapLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          <div className="text-2xl font-semibold text-gray-700">Loading map...</div>
+        </div>
+      )}
       {selectedPolygon !== null && (
         <div className="absolute top-4 left-4 bg-white p-4 rounded shadow">
           <h2 className="text-lg font-semibold mb-2">Selected Polygon</h2>

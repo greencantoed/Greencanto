@@ -11,6 +11,10 @@ const nextConfig = {
     locales: ['it'],
     defaultLocale: 'it',
   },
+  webpack: (config) => {
+    config.resolve.fallback = { fs: false, path: false };
+    return config;
+  },
   async headers() {
     return [
       {
@@ -18,7 +22,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://api.mapbox.com https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.mapbox.com; connect-src 'self' https://api.mapbox.com https://vercel.live",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://api.mapbox.com https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.mapbox.com; connect-src 'self' https://api.mapbox.com https://vercel.live",
           },
           {
             key: 'X-Frame-Options',
