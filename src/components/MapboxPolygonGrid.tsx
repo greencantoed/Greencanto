@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useRef, useEffect, useState, useCallback } from 'react'
+import mapboxgl from 'mapbox-gl'
 import type { Map as MapboxMap, MapboxGeoJSONFeature } from 'mapbox-gl'
 
 const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
@@ -99,7 +100,6 @@ const MapboxPolygonGrid: React.FC = () => {
 
     const initializeMap = async () => {
       try {
-        const mapboxgl = (await import('mapbox-gl')).default
         mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN || ''
 
         const newMap = new mapboxgl.Map({
@@ -149,10 +149,10 @@ const MapboxPolygonGrid: React.FC = () => {
 
           newMap.on('click', 'polygon-fills', handlePolygonClick)
           newMap.on('mouseenter', 'polygon-fills', () => {
-            if (newMap) newMap.getCanvas().style.cursor = 'pointer'
+            newMap.getCanvas().style.cursor = 'pointer'
           })
           newMap.on('mouseleave', 'polygon-fills', () => {
-            if (newMap) newMap.getCanvas().style.cursor = ''
+            newMap.getCanvas().style.cursor = ''
           })
 
           map.current = newMap
