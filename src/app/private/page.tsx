@@ -29,7 +29,7 @@ const landPlots = [
       { lat: 37.500375, lng: 14.913816 },
       { lat: 37.501727, lng: 14.916455 },
       { lat: 37.503105, lng: 14.916842 },
-      { lat: 37.503642, lng: 14.915512 },
+      { lat: 37.502800, lng: 14.914000 },
     ]
   }
 ]
@@ -46,6 +46,7 @@ export default function PrivatePage() {
 
   const handlePlotSelect = (plotId: number) => {
     setSelectedPlot(plotId)
+    setShowBlog(true)
   }
 
   return (
@@ -65,15 +66,15 @@ export default function PrivatePage() {
       </header>
       <main className="flex-grow relative">
         <MapComponent landPlots={landPlots} onPlotSelect={handlePlotSelect} />
-        {isLoggedIn && (
-          <div className="absolute top-4 left-4 z-20">
-            <Button onClick={() => setShowBlog(!showBlog)}>
-              {showBlog ? 'Nascondi Blog' : 'Mostra Blog'}
+        {showBlog && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-30 w-3/4 h-3/4 overflow-auto">
+            <Button 
+              className="absolute top-2 right-2" 
+              onClick={() => setShowBlog(false)}
+              variant="outline"
+            >
+              Chiudi
             </Button>
-          </div>
-        )}
-        {showBlog && isLoggedIn && (
-          <div className="absolute inset-0 bg-white bg-opacity-90 overflow-auto z-30">
             <CommunityBlog />
           </div>
         )}

@@ -5,7 +5,7 @@ import { GoogleMap, Polygon, useJsApiLoader } from '@react-google-maps/api'
 
 const containerStyle = {
   width: '100%',
-  height: '80vh'  // Increased map size
+  height: '80vh'
 }
 
 const center = {
@@ -23,7 +23,7 @@ interface MapComponentProps {
   onPlotSelect: (plotId: number) => void
 }
 
-const GRID_SIZE = 10 // Number of cells in each direction
+const GRID_SIZE = 20 // Increased for smaller cells
 
 export default function MapComponent({ landPlots, onPlotSelect }: MapComponentProps) {
   const { isLoaded } = useJsApiLoader({
@@ -53,6 +53,19 @@ export default function MapComponent({ landPlots, onPlotSelect }: MapComponentPr
     setMap(null)
   }, [])
 
+  const isPointInPolygon = (point: google.maps.LatLng, polygon: google.maps.LatLng[]) => {
+    let isInside = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      const xi = polygon[i].lat(), yi = polygon[i].lng();
+      const xj = polygon[j].lat(), yj = polygon[j].lng();
+      
+      const intersect = ((yi > point.lng()) !== (yj > point.lng())) &&
+        (point.lat() < (xj - xi) * (point.lng() - yi) / (yj - yi) + xi);
+      if (intersect) isInside = !isInside;
+    }
+    return isInside;
+  }
+
   const handlePolygonClick = useCallback((plotId: number) => {
     setSelectedPlot(plotId)
     onPlotSelect(plotId)
@@ -74,6 +87,8 @@ export default function MapComponent({ landPlots, onPlotSelect }: MapComponentPr
 
       const newCells: google.maps.Polygon[] = []
 
+      const polygonPath = plot.coordinates.map(coord => new google.maps.LatLng(coord.lat, coord.lng))
+
       for (let i = 0; i < GRID_SIZE; i++) {
         for (let j = 0; j < GRID_SIZE; j++) {
           const cellCoords = [
@@ -83,22 +98,29 @@ export default function MapComponent({ landPlots, onPlotSelect }: MapComponentPr
             { lat: sw.lat() + latSpan * (i / GRID_SIZE), lng: sw.lng() + lngSpan * ((j + 1) / GRID_SIZE) },
           ]
 
-          const cell = new google.maps.Polygon({
-            paths: cellCoords,
-            strokeColor: '#FFFFFF',
-            strokeOpacity: 0.8,
-            strokeWeight: 1,
-            fillColor: '#00FF00',
-            fillOpacity: 0.35,
-            map: mapRef.current,
-          })
+          const cellCenter = new google.maps.LatLng(
+            sw.lat() + latSpan * ((i + 0.5) / GRID_SIZE),
+            sw.lng() + lngSpan * ((j + 0.5) / GRID_SIZE)
+          )
 
-          cell.addListener('click', () => {
-            console.log(`Clicked cell: row ${i}, col ${j}`)
-            // Here you can implement logic for selecting individual cells
-          })
+          if (isPointInPolygon(cellCenter, polygonPath)) {
+            const cell = new google.maps.Polygon({
+              paths: cellCoords,
+              strokeColor: '#FFFFFF',
+              strokeOpacity: 0.8,
+              strokeWeight: 1,
+              fillColor: '#00FF00',
+              fillOpacity: 0.35,
+              map: mapRef.current,
+            })
 
-          newCells.push(cell)
+            cell.addListener('click', () => {
+              cell.setOptions({ fillColor: '#FF0000' })
+              console.log(`Selected cell: row ${i}, col ${j}`)
+            })
+
+            newCells.push(cell)
+          }
         }
       }
 
@@ -106,7 +128,7 @@ export default function MapComponent({ landPlots, onPlotSelect }: MapComponentPr
     }
   }, [landPlots, onPlotSelect, gridCells])
 
-  // Adjusted trapezoid-like coordinates
+  // Adjusted coordinates for non-overlapping fields
   const adjustedLandPlots: LandPlot[] = [
     {
       id: 1,
@@ -125,7 +147,7 @@ export default function MapComponent({ landPlots, onPlotSelect }: MapComponentPr
         { lat: 37.500375, lng: 14.913816 },
         { lat: 37.501727, lng: 14.916455 },
         { lat: 37.503105, lng: 14.916842 },
-        { lat: 37.503642, lng: 14.915512 },
+        { lat: 37.502800, lng: 14.914000 },
       ]
     }
   ]
