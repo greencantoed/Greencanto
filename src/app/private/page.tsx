@@ -1,36 +1,35 @@
 'use client'
 
 import { useState } from 'react'
-import MapComponent from '@/components/MapComponent'
+import dynamic from 'next/dynamic'
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import CommunityBlog from '@/components/CommunityBlog'
+
+const MapComponent = dynamic(() => import('@/components/MapComponent'), {
+  loading: () => <p>Caricamento mappa...</p>,
+  ssr: false
+})
 
 const landPlots = [
   {
     id: 1,
     coordinates: [
-      { lat: 37.503217061923806, lng: 14.908150559846465 },
+      { lat: 37.503217, lng: 14.908150 },
       { lat: 37.502578, lng: 14.909234 },
-      { lat: 37.50185500731567, lng: 14.913461162971762 },
+      { lat: 37.501855, lng: 14.913461 },
       { lat: 37.503990, lng: 14.915404 },
       { lat: 37.504272, lng: 14.913262 },
-      { lat: 37.504563, lng: 14.912478 },
-      { lat: 37.5039488183456, lng: 14.91118664972715 },
-      { lat: 37.503217061923806, lng: 14.908150559846465 }
     ]
   },
   {
     id: 2,
     coordinates: [
       { lat: 37.500961, lng: 14.911509 },
-      { lat: 37.500375, lng: 14.9138164 },
-      { lat: 37.5000603, lng: 14.9109129 },
+      { lat: 37.500375, lng: 14.913816 },
       { lat: 37.501727, lng: 14.916455 },
-      { lat: 37.503105905104434, lng: 14.91684296960928 },
-      { lat: 37.50364212161175, lng: 14.915512593937905 },
-      { lat: 37.501844, lng: 14.913702 },
-      { lat: 37.500961, lng: 14.911509 }
+      { lat: 37.503105, lng: 14.916842 },
+      { lat: 37.503642, lng: 14.915512 },
     ]
   }
 ]
