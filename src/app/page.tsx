@@ -91,7 +91,7 @@ export default function Home() {
       <main>
         {/* Home section */}
         <section id="home" className="min-h-screen flex items-center relative overflow-hidden snap-start">
-          <div className="container mx-auto px-4 py-24 flex flex-col lg:flex-row items-center">
+          <div className="container mx-auto px-4 py-24 flex flex-col lg:flex-row items-start">
             <div className="lg:w-1/2 z-10">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -124,14 +124,14 @@ export default function Home() {
                 </motion.div>
               </motion.div>
             </div>
-            <div className="lg:w-1/2 mt-12 lg:mt-0">
+            <div className="lg:w-1/2">
               <motion.div
-                className="relative w-full h-[450px]"
+                className="relative w-full"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
               >
-                <EnricoLanding width={900} height={900} className="absolute top-0 right-0 w-full h-full object-contain" />
+                <EnricoLanding className="w-full h-auto object-contain" />
               </motion.div>
             </div>
           </div>
