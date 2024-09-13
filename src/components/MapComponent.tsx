@@ -28,7 +28,7 @@ const GRID_SIZE = 20 // Increased for smaller cells
 export default function MapComponent({ landPlots, onPlotSelect }: MapComponentProps) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyA0yxR88acE9_otHAjrdLCscETZlSDgx6I'
+    googleMapsApiKey:
   })
 
   const [map, setMap] = useState<google.maps.Map | null>(null)
