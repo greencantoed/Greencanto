@@ -1,15 +1,15 @@
 'use client'
 
-import React, { ReactNode, useState, useEffect } from 'react'
+import React, { ReactNode } from 'react'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
-import { ChevronDown, Zap, Leaf, Users, Send, Menu } from "lucide-react"
+import { ChevronDown, Zap, Leaf, Users, Send } from "lucide-react"
 import Image from 'next/image'
 import EnricoLanding from '@/components/EnricoLanding'
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
 const FadeInSection = ({ children }: { children: ReactNode }) => {
@@ -30,64 +30,9 @@ const FadeInSection = ({ children }: { children: ReactNode }) => {
   )
 }
 
-const NavLink = ({ href, children }: { href: string; children: ReactNode }) => (
-  <Link href={href} className="text-white hover:text-[#d76a03] transition-colors duration-200">
-    {children}
-  </Link>
-)
-
 export default function Home() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#2d677d] to-[#f4f4f4] overflow-y-auto snap-y snap-mandatory">
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrollY > 50 ? 'bg-[#2d677d] shadow-md' : ''}`}>
-        <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-white">Greencanto</Link>
-          <div className="hidden md:flex space-x-6">
-            <NavLink href="#home">Home</NavLink>
-            <NavLink href="#mission">Mission</NavLink>
-            <NavLink href="#team">Team</NavLink>
-            <NavLink href="#join">Join</NavLink>
-            <NavLink href="#contact">Contact</NavLink>
-            <NavLink href="/private">Private</NavLink>
-          </div>
-          <Button
-            variant="ghost"
-            className="md:hidden text-white"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <Menu />
-          </Button>
-        </nav>
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-[#2d677d] py-4"
-            >
-              <div className="container mx-auto px-4 flex flex-col space-y-4">
-                <NavLink href="#home">Home</NavLink>
-                <NavLink href="#mission">Mission</NavLink>
-                <NavLink href="#team">Team</NavLink>
-                <NavLink href="#join">Join</NavLink>
-                <NavLink href="#contact">Contact</NavLink>
-                <NavLink href="/private">Private</NavLink>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
-
       <main>
         {/* Home section */}
         <section id="home" className="min-h-screen flex items-center relative overflow-hidden snap-start">
