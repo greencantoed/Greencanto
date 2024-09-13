@@ -2,7 +2,6 @@ import { Archivo_Black, Quattrocento_Sans, Lato } from 'next/font/google'
 import Link from 'next/link'
 import './globals.css'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import Navbar from '@/components/Navbar'
 
 const archivoBlack = Archivo_Black({
   weight: '400',
@@ -41,7 +40,6 @@ export default function RootLayout({
         <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
       </head>
       <body className={`${quattrocentoSans.className} flex flex-col min-h-screen`}>
-        <Navbar />
         <main className="flex-grow">{children}</main>
         <footer className="bg-[#2d677d] text-white py-8">
           <div className="container mx-auto px-8 text-center">
